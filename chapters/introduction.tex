@@ -3,4 +3,294 @@
 \section{A Multi-Stage Allocation Process}
 
 \subsection{Introduction}
+\subsubsection*{Notation}
 
+The standard Dynamic Programming problem desribed throughout will be in metric space $\mathbb{X}$.
+
+Given, $\Phi: \mathbb{X} \times \mathbb{X} \to \R$ and $\Gamma: \mathbb{X} \rightrightarrows \R$
+
+For a fixed $x^0$, find a sequence ${x_m} = {x^1, ..., x^m, ...}$ such that
+$$
+\max \Phi(x^0, x^1) + \sum_{i=1}^{\infty}\delta^i \Phi(x^i, x^{i+1}), \text{ where } \delta \in (0,1) \text{ and } x^1 \in \Gamma(x^0), x^{i+1} \in \Gamma(x^i), m = 1,2,3,...
+$$
+
+Here $\delta$ is called the discount factor.
+
+\subsubsection*{Functional Equations}
+
+Considering a space of Real numbers $\R$, we can define a functional equation as follows:
+
+$$
+f(x) = \max_{0 \le y \le x} [g(y) + h(x-y) + f(ay+b(x-y))]
+$$
+
+where $a,b \in \R$ and $g,h$ are given functions.
+
+This can be seen as an \textbf{insurance problem} where functions $g$ and $h$ represent the different places where and initial premium $x$ is invested. The function $f$ represents the value of the policy at the end of the period.
+
+\vspace{5mm}
+We can define, $R_1(x, y) = g(y) + h(x-y)$, initially the aim is to determine $\max_{0 \le y \le x} R_1(x, y)$. The value of $x$ and $y$ obtained from this maximization can be used to generate the next element of the sequence $x_m$.
+
+i.e. $x_1 = ay + b(x-y) = y_1 + (x_1-y_1)$
+
+Further we define $R_2(x, y, y_1) = g(y) + h(x-y) + g(y_1) + h(x_1-y_1)$ where $(y, y_1) \in [0, x] \times [0, x_1]$
+
+\vspace{5mm}
+This can be generalized to $R_m(x, y, y_1, ..., y_{m-1}) = g(y) + h(x-y) + g(y_1) + h(x_1-y_1) + g(y_2) + h(x_2-y_2) + ... + g(y_{m-1}) + h(x_{m-1} - y_{m-1})$
+
+and the maximization problem becomes
+\[
+\max R_m(x, y, y_1, ..., y_{m-1}) \text{ such that }
+\]
+\[ 
+\begin{array}{ll}
+    ay+b(x-y) = x_1 & 0 \le y \le x \\
+    ay_1+b(x_1-y_1) = x_2 & 0 \le y_1 \le x_1 \\
+    \vdots & \vdots\\
+    ay_{m-1}+b(x_{m-1}-y_{m-1}) = x_m & 0 \le y_{m-1} \le x_{m-1}
+\end{array}
+\]
+
+Here, $f_N(x) = \max_{t, y_i} R_N(x, y_1, ..., y_N)$ and $f_N(x)$ can be interpreted as the maximum return obtained from an N-stage decision with initial premium $x$ and $x \ge 0$.
+$$
+\therefore f_N(x) = \max_{0 \le y \le x} [g(y) + h(x-y) + f_{N-1}(ay+b(x-y))]
+$$
+or 
+$$
+f(x) = \max_{0 \le y \le x} [g(y) + h(x-y) + f(ay+b(x-y))] \text{ for } N \rightarrow \infty
+$$
+
+\subsection{Existence and Uniqueness Theorems}
+Under the following assumptions, the functional equation has a unique solution, which is continuous at $x=0$ and has a value 0 at $x=0$. Moreover the solution is continuous at $x \ge 0$.
+\newpage
+The assumptions are:
+\begin{enumerate}
+    \item $g$ and $h$ are continuous on $[0, \infty)$ and g(0) = h(0) = 0
+    \item If $m(x) = \max_{0 \le y \le x} [\max\{|g(y)|, |h(y)|\}]$ and $c = \max \{a, b\}$, then $\bigsum_{n=0}^{\infty} m(c^nx) < \infty \forall x \ge 0$
+\end{enumerate}
+
+\begin{proof}
+    We define a mapping $T(f, y) = g(y) + h(x-y) + f(ay+b(x-y))$ and $f_{N+1}(x) = \max_{0 \le y \le x} T(f_N, y)$, assuming $g$ and $h$ to be non-negative.
+
+    The sequence $\{f_N(x)\}$ is an increasing sequence of functions such that $f_N \rightarrow f$
+
+    Prooving that $T$ is bounded above would suffice.
+
+    \textbf{Method 1:} We know that $x_1 \le cx$
+    $$
+        \begin{array}{c}
+            \therefore ax_1 + b(x_1 - y) \le cx_1 \le c^2x \\
+            \implies T(f_N, y) \le 2(m(x) + m(cx) + ... + m(c^Nx))
+        \end{array}
+    $$
+    Which proves that $T$ is bounded above by a constant. 
+
+    \textbf{Method 2:} 
+    $$
+    \begin{array}{l}
+        f_{N+1}(x) = \mathlarger{\sup}_{ 0 \le y \le x} T(f_N, y) \\
+        f(x) \ge \mathlarger{\sup}_{ 0 \le y \le x} T(f_N, y) \\
+        f(x) \ge T(f_N, y) \forall y \in [0, x] \\
+        f(x) \ge T(f, y) \text{ as } N \rightarrow \infty\\
+        \therefore \boxed{f(x) = \mathlarger{\sup}_{ 0 \le y \le x} T(f, y)}
+    \end{array}
+    $$
+    Also, 
+    \begin{align*}
+        T(f_N, y) &= g(y) + h(x-y) + f_N(ay+b(x-y)) \\
+                    &\le g(y) + h(x-y) + f(ay+b(x-y)) \\
+                    &= T(f, y)
+    \end{align*}
+    \begin{align*}
+        f_{N+1}(x) &= \mathlarger{\sup}_{ 0 \le y \le x} T(f_N, y) \\
+                    &\le \mathlarger{\sup}_{ 0 \le y \le x} T(f, y) \\
+        f_{N+1}(x) &\le \mathlarger{\sup}_{ 0 \le y \le x} T(f, y)
+    \end{align*}
+    As $N \rightarrow \infty$, 
+    $$
+    \boxed{f(x) \le \mathlarger{\sup}_{ 0 \le y \le x} T(f, y)}
+    $$
+    $$
+    \therefore f(x) = \mathlarger{\sup}_{ 0 \le y \le x} T(f, y) \text{ using the above two inequalities}
+    $$
+\end{proof}
+
+\subsubsection*{Existence and Uniqueness with g and h not necessarily non-negative}
+We can write, 
+\begin{align*}
+    f_1(x) &= \max_{0 \le y \le x} [g(y) + h(x-y)] \\
+            &= \max_{y \in [0, x]} [g(y) + h(x-y) + 0] \\
+            &= \max_{y \in \Gamma(x)} [g(y) + h(x-y)] & \Gamma(x) = [0, x] \text { a set valued map}
+\end{align*}
+
+\begin{tcolorbox}
+    \begin{center}
+        \textbf{\underline{Digression}}
+    \end{center}
+
+    We will use a generalized form of Berge Maximum Theorem in the following proof, which is described here.
+
+    \textbf{Berge Maximum Theorem (Generalized Form)}
+
+    Let $\Theta$ and $\mathbb{X}$ be two metric spaces and $\Gamma: \Theta \rightrightarrows \mathbb{X}$ is a compact valued correspondence. Let $\phi: \mathbb{X} \times \Theta \rightarrow \mathbb{R}$ be a continuous function.
+
+    Let $\sigma(\theta) = argmax\{\phi(x, \theta): x \in \Gamma(\theta)\}$ and let $\phi^*(\theta) = \mathlarger{\max}_x\{\phi(x, \theta): x \in \Gamma(\theta)\}$
+
+    \vspace{3mm}
+    Let $\Gamma: \Theta \rightrightarrows \mathbb{X}$ is continuous at some $\theta \in \Theta$. Then,
+    \begin{enumerate}
+        \item $\sigma: \Theta \rightrightarrows \mathbb{X}$ is compact-valued, upper semi-continuous and closed at $\theta$.
+        \item $\phi^*: \Theta \rightarrow \R$ is continuous at $\theta$.
+    \end{enumerate}
+
+    Some definitions that follow from above are:
+    \begin{enumerate}
+        \item {
+            \textbf{Upper semi-continuous Map:}
+            Let $\Gamma: \mathbb{X} \rightrightarrows \mathbb{Y}$, then $\Gamma$ is upper semi-continuous at $x \in \mathbb{X}$ if for any $\{x^m\} \in \mathbb{X}$ and $\{y^m\} \in \mathbb{Y}$ with $x^m_0 \rightarrow x$ and $y^m \in \Gamma(x^m)$, the sequence $\{y^m\}$ has a convergent subsequence such that its limit is in $\Gamma(x)$.
+        }
+        \item {
+            \textbf{Compact valued Map:}
+            $\Gamma: \mathbb{X} \rightrightarrows \mathbb{Y}$ is a compact valued correspondence which is upper semi-continuous if for a compact subset $S \subset \mathbb{X}$, the set $\Gamma(S)$ is compact.
+        }
+        \item {
+            \textbf{Closed Map:}
+            $\Gamma: \mathbb{X} \rightrightarrows \mathbb{Y}$ is closed at $x \in \mathbb{X}$ if for any $\{x^m\} \in \mathbb{X}$ with $x^m \rightarrow x$ and $\{y^m\} \in \mathbb{Y}$ with $y^m \rightarrow y$ such that $y^m \in \Gamma(x^m)$ for each m, we have $y \in \Gamma(x)$. 
+        }
+    \end{enumerate}
+\end{tcolorbox}
+
+By applying the generalized form of Berge Maximum Theorem, we can show that $f_1(x)$ is continuous.
+
+\vspace{5mm}
+$T(f_N, y) = g(y) + h(x-y) + f_N(ay+b(x-y))$ and $f_{N+1}(x) = \mathlarger{\max}_{0 \le y \le x} T(f_N, y)$.
+
+\begin{align*}
+    f_{N+1}(x) = T(f_N, y_N) \ge T(f_N, y_N+1) \\
+    f_{N+2}(x) = T(f_N+1, y_N+1) \ge T(f_N+1, y_N)
+\end{align*}
+
+Define, 
+$$
+    u_N(x) = \sup_{0 \le z \le x} |f_N(z) - f_N+1(z)|
+$$
+
+and
+\begin{align*}
+    f_{N+1}(x) - f_{N+2}(x) \ge T(f_N, y_{N+1}) - T(f_N+1, y_{N+1})\\
+    f_{N+1}(x) - f_{N+2}(x) \le T(f_N, y_{N}) - T(f_N+1, y_{N})\\
+\end{align*}
+From these two inequalities, we get
+$$
+|f_{N+1}(x) - f_{N+2}(x)| \le \max \{|T(f_N, y_{N+1}) - T(f_N+1, y_{N+1})|, |T(f_N, y_{N}) - T(f_N+1, y_{N})|\}
+$$
+$$
+|T(f_N, y_{N+1}) - T(f_N+1, y_{N+1})| = |f_N(ay_N +  b(x-y_N)) - f_{N+1}(ay_{N+1} +  b(x-y_{N+1})) \le u_N(cx)
+$$
+$$
+|T(f_N, y_{N}) - T(f_N+1, y_{N})| = |f_N(ay_N +  b(x-y_N)) - f_{N+1}(ay_{N} +  b(x-y_{N})) \le u_N(cx)
+$$
+$\because ay+b(x-y) \le cx$ where $c = \max\{a, b\}$
+
+$$
+\therefore \boxed{u_{N+1}(x) \le u_N(cx)} \text{ for } N \in \N 
+$$
+
+We now need to estimate $u_1(x)$
+\begin{align*}
+    f_2(x) = T(f_1, y_1)\\
+    f_1(x) - f_2(x) \ge g(y_1) + h(x-y_1) - T(f_1, y_1)\\
+    f_2(x) - f_1(x) \le f_1(ay_1 +  b(x-y_1))
+\end{align*}
+
+Let $y_0$ be the maximizing point to obtain $f_1(x)$ i.e. $f_1(x) = g(y_0) + h(x-y_0)$ and $f_2(x) \ge T(f_1, y_0)$
+
+\begin{align*}
+    f_1(x) - f_2(x) &\ge g(y_0) + h(x-y_0) - T(f_1, y_0)\\
+                    &= -f_1(ay_0 +  b(x-y_0))\\
+    f_2(x) - f_1(x) &\ge f_1(ay_0 +  b(x-y_0))\\
+\end{align*}
+\[
+    |f_2(x) - f_1(x)| \le \max\{f_1(ay_1 +  b(x-y_1)), |f_1(ay_0 +  b(x-y_0))|\} \implies
+    |f_2(x) - f_1(x)| \le 2m(cx) \forall z \in [0, x]
+\]
+
+$$\therefore \boxed{u_1(x) \le 2m(cx)}$$
+
+$$
+u_{N+1}(x) \le u_N(cx) \le u_{N-1}(c^2x) \le ... \le u_1(c^Nx) \le 2m(c^{N+1}x)
+$$
+$$
+\therefore {u_{N+1}(x) \le 2m(c^{N+1}x) \text{ and } u_1(x) \le 2m(cx)} \text{ for } N \in \N
+$$
+$$
+\implies \boxed{u_N(x) \le 2m(c^{N}x) \text{ for } N \in \N}
+$$
+
+From the above result we can say that, 
+$$
+\bigsum_{N=1}^{\infty} u_N(x) \le \bigsum_{N=1}^{\infty} 2m(c^{N}x)
+$$
+that is 
+$$
+\bigsum_{N=1}^{\infty} u_N(x) \le \infty \text{(convergent)}
+$$
+$$
+\implies u_N(x) \rightarrow 0 \text{ as } N \rightarrow \infty
+$$
+$\implies f_N(x)$ is a cauchy sequence (which then implies that $f_N-f_M$ can be expressed as a sum of differences).
+$$
+\therefore f(x) = \lim_{N \rightarrow \infty} f_N(x) \text{ exists and is continuous } \forall x \ge 0
+$$
+
+\vspace{5mm}
+
+Now we know that, 
+\begin{align*}
+    f_{N+1}(x) &\ge T(f_N, y)\\
+               &\ge g(y) + h(x-y) + f_N(ay+b(x-y)) \text{ for } y \in [0, x]\\
+\end{align*}
+
+For large $N$, 
+\begin{align*}
+    f(x) &\ge g(y) + h(x-y) + f(ay+b(x-y))\\
+        &\ge \mathlarger{\max}_{0 \le y \le x} T(f, y) & (A)\\
+\end{align*}
+
+For a bounded sequence $\{y_N\}$ with $y_N \rightarrow y^*$ for some $y^* \in [0, x]$ and $N \rightarrow \infty$ we have,
+
+\begin{align*}
+    f(x) &= T(f, y^*) \\
+        &\le \mathlarger{\max}_{0 \le y \le x} T(f, y) & (B)\\
+\end{align*}
+
+using (A) and (B), 
+$$
+\boxed{f(x) = \mathlarger{\max}_{0 \le y \le x} T(f, y)}
+$$
+
+\subsubsection*{Uniqueness}
+By proving the existence, we know that,
+$$f(x) = \mathlarger{\max}_{0 \le y \le x} T(f, y)$$
+Assume on the contrary that there are two such solutions $f \& F$
+\begin{align*}
+    f(x) = T(f, y) \ge T(f, w)\\
+    F(x) = T(F, w) \ge T(F, y)\\
+\end{align*}
+
+Now,
+\begin{align*}
+    |f(x) - F(x)| &\le \max\{|T(f, y) - T(F, y)|,|T(f, w) - T(F, w)|\}\\
+                    &\le \max\{|f(ay+b(x-y) - F(ay+b(x-y))|,|f(aw+b(x-w) - F(aw+b(x-w))|\}\\
+\end{align*}
+
+From previous definition, $u(x) = \mathlarger{\sup}_{0 \le z \le x} f(z) - F(z)$
+We know that $u(x) \ge 0$ and $u(x) \rightarrow 0$ as $x \rightarrow \infty$.
+
+\begin{align*}
+    \therefore 0 \ge u(x) \ge |f(x) - F(x)| \\
+    \implies |f(x) - F(x)| \rightarrow 0 \text{ as } x \rightarrow \infty\\
+    \implies f(x) = F(x) \text{ for all } x \ge 0
+\end{align*}
+
+$\therefore$ The solution obtained is unique.
