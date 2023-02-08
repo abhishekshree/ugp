@@ -3,7 +3,7 @@
 \section{A Multi-Stage Allocation Process}
 
 \subsection{Introduction}
-\subsubsection*{Notation}
+\subsubsection{Notation}
 
 The standard Dynamic Programming problem desribed throughout will be in metric space $\mathbb{X}$.
 
@@ -16,7 +16,7 @@ $$
 
 Here $\delta$ is called the discount factor.
 
-\subsubsection*{Functional Equations}
+\subsubsection{Functional Equations}
 
 Considering a space of Real numbers $\R$, we can define a functional equation as follows:
 
@@ -115,7 +115,7 @@ The assumptions are:
     $$
 \end{proof}
 
-\subsubsection*{Existence and Uniqueness with g and h not necessarily non-negative}
+\subsubsection{Existence and Uniqueness with g and h not necessarily non-negative}
 We can write, 
 \begin{align*}
     f_1(x) &= \max_{0 \le y \le x} [g(y) + h(x-y)] \\
@@ -269,7 +269,7 @@ $$
 \boxed{f(x) = \mathlarger{\max}_{0 \le y \le x} T(f, y)}
 $$
 
-\subsubsection*{Uniqueness}
+\subsubsection{Uniqueness}
 By proving the existence, we know that,
 $$f(x) = \mathlarger{\max}_{0 \le y \le x} T(f, y)$$
 Assume on the contrary that there are two such solutions $f \& F$
