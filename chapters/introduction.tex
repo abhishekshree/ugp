@@ -294,3 +294,120 @@ We know that $u(x) \ge 0$ and $u(x) \rightarrow 0$ as $x \rightarrow \infty$.
 \end{align*}
 
 $\therefore$ The solution obtained is unique.
+
+\subsection{Approximations}
+
+\begin{theorem}
+    Let $f_0(x)$ satisfy the following conditions:
+    \begin{itemize}
+        \item $f_0(x)$ is continuous for $x \ge 0$
+        \item $f_0(0) = 0$
+    \end{itemize}
+
+    Then if the conditions of existence are fulfilled, the sequence defined by
+    $$
+        f_{n+1}(x) = \max_{0 \le y \le x} T(f_n, y) \text{ for } n \in \mathbb{W}
+    $$
+    converges to the solution $f(x)$ of the problem, uniformly in any finite interval.
+\end{theorem}
+
+\subsubsection{Approximation in the policy space}
+We call a sequence of allocations, i.e. a sequence of admissible choices of $y$, a policy and a policy which yields $f(x)$ an optimal policy. 
+
+The duality that exists in the theory of dynamic programmingarises
+from the interconnection between the functions $f(x)$ which measure the maximum return and the policies which yield these maximum returns. Actually a policy is a function, since a policy is a determination of $y$ as a function of $x$. If the policy is not unique, $y$ will not be a single-valued function of $x$.
+
+Just as we can approximate in the space of the functions $f(x)$, so we can approximate in the space of policies, $y(x)$.
+
+\begin{theorem}
+    Let $f_0(x)$ be the result of an initial approximation in the policy space, that is, $f_0(x)=T(f_0, y_0(x))$ where $y_0(x)$ is any continuous function of $x$ satisfying $0 \le y_0(x) \le x$, the sequence defined by
+    $$
+    f_{n+1}(x) = \max_{0 \le y \le x} T(f_n, y) \text{ for } n \in \mathbb{N}
+    $$
+    converges to the solution $f(x)$, uniformly and in a finite interval.
+\end{theorem}
+\begin{proof}
+    By the definition of $f_n(x)$, we have
+    $$f_{n+1} \ge f_n \ge f_0 \text{ }\forall \text{ }\mathbb{N}$$
+    Proving that $f_0(x)$ is continuous, will imply continuity of $f_n(x)$.
+
+    $$
+    f_0(x) = g(y_0) + h(x-y_0) + \cdots\\
+    $$
+    where $g$ and $h$ are continuous functions.
+
+    Hence, $f_0(x)$ which is iteratively obtained from $g(x)$ and $h(x)$ is also continuous in a finite interval.
+
+\end{proof}
+We can construct examples for such a solution, say
+\begin{example*}
+    $f(x) = T(f, y(x))$ be an iterative form of the solution.
+
+    If the optimal policy consisted of the choice $y=0$ continually, the solution can be represented by the equation $f(x)=h(x)+f(bx)$, with the value of $b$ such that $h(b^nx) < \infty$
+    
+    i.e.,
+    \begin{align*}
+        f(x) &= h(x) + f(bx)\\
+             &= h(x) + h(bx) + f(b^2x)\\
+             &= h(x) + h(bx) + h(b^2x) + f(b^3x)\\
+             &= \cdots\\
+             &= \bigsum_{n=0}^{\infty} h(b^n x)\\
+    \end{align*}
+
+    Here, $h(b^n x) < \infty$ for all $n \in \mathbb{N}$, so the series converges and $f(x)$ is a continuous function of $x$.
+\end{example*}
+
+\subsection{Properties of the solution}
+\subsubsection{Convexity}
+
+\begin{theorem} If, along with existence assumptions, we impose
+the conditions that $g$ and $h$ be convex functions of $x$, then $f(x)$ will be a
+convex function, and for each value of $x$, $y$ will equal 0 or $x$.
+\end{theorem}
+
+\begin{proof}
+    $g$ and $h$ are convex functions and, 
+    $$f_1(x) = \max_{0 \le y \le x}(g(y) + h(x-y))$$
+    In the interval $[0, x]$, $g$ and $h$ are convex, hence $g(y) + h(x-y)$ is also convex.
+
+    $\because$ Maximum of a convex function must occur at the endpoints of the interval, i.e. $y=0$ or $y=x$. We can say that, 
+    $$f_1(x) = \max(g(y), h(x))$$
+
+    Then, 
+    $$f_2(x) = \max_{0 \le y \le x}(g(y) + h(x-y) + f_1(ay + b(x-y)))$$
+    similarly follows,
+    $$f_2(x) = \max(g(x) + f_1(ax), h(x) + f_1(bx))$$
+
+    Therefore we can inductively conclude that $f_n(x)$ is convex thus, the limit of the sequence $f(x)$ is also convex.
+\end{proof}
+
+\subsubsection{Concavity}
+\begin{theorem}
+    \textbf{[Weak Version]} If, along with existence assumptions, we impose the conditions that $g$ and $h$ be strictly concave functions of $x$, then $f(x)$ will be a strictly concave function, with an optimal policy which is unique.
+\end{theorem}
+
+\begin{lemma} If $G(x, y)$ is a concave function of $x$ and $y$ for $x, y \ge 0$, then $f(x)$ as defined by $f(x) = \mathlarger{\max}_{0 \le y \le x} G(x, y)$ is a concave function of $x$ for $x > 0$.
+\end{lemma}
+
+\begin{theorem}
+    \textbf{[Strong Version]} Assuming that,
+    \begin{enumerate}
+        \item $g(x)$ and $h(x)$ are both strictly concave for $x > 0$, monotone increasing with continuous derivatives and that $g(0) = h(0) = 0$.
+        \item $\mathlarger{\frac{g'(0)}{(1 - a)} > \frac{h'(0)}{(1 - b)}}, h'(0) > g'(\infty), b > a$.
+    \end{enumerate}
+    Then the optimal policy has the following form:
+    \begin{enumerate}
+        \item $y=x$ for $O<x<\bar{x}$, where $\bar{x}$ is the root of $h'(0)=g'(x)+(b-a)g'(ax)+(b-a)ag'(a^2x) +\cdots$
+        \item $y=y(x)$ for $x > \bar{x}$ where $y(x)$ is a function satisfying the inequalities $O < y(x) < x$, and $y(x)$ is the solution of $\boxed{g'(y)-h'(x-y)+(a-b)f'(ay+b(x-y))=0}$
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    It is known that, 
+    $$f_1(x) = \max_{0 \le y \le x}(g(y) + h(x-y))$$
+
+    $\because g'(0) > h'(0) \implies g'(y)-h'(x-y)>0$ for $y \in [0, x]$ with the roots at $y=x$ and in the interval $[0, x'], \forall x' > y$
+
+    At $y=x$, the value $x^*$ for which $g'(x^*)-h'(0) = 0$ is the root of the equation $g'(x)-h'(0) = 0$. 
+    % TODO
+\end{proof}
