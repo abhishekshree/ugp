@@ -408,6 +408,70 @@ convex function, and for each value of $x$, $y$ will equal 0 or $x$.
 
     $\because g'(0) > h'(0) \implies g'(y)-h'(x-y)>0$ for $y \in [0, x]$ with the roots at $y=x$ and in the interval $[0, x'], \forall x' > y$
 
-    At $y=x$, the value $x^*$ for which $g'(x^*)-h'(0) = 0$ is the root of the equation $g'(x)-h'(0) = 0$. 
-    % TODO
+    At $y=x$, the value $x^*$ for which $g'(x^*)-h'(0) = 0$ is the root of the equation $g'(x)-h'(0) = 0$.
+
+    This equation has precisely one solution due to the fact that $g$ and $h$ are strictly concave.
+
+    For $x \ge x^*$, let $y_1 (x)$ be the unique solution of $g' (y) = h' (x - y)$. Then, $f_1(x) = g(y_1) + h(x-y_1)$ and $f'(x) = [g'(y_1) - h'(x-y_1)]\frac{dy_1}{dx} + h'(x-y_1) = h'(x-y_1)$ for $x > x_1$.
+
+    Further, 
+    \begin{equation*}
+        f_2(x) = 
+        \begin{cases}
+            g'(x), & \text{if } 0 \le x \le x_2\\
+            h'(x-y_2) + bf_1(ay_2+b(x-y_2)), & \text{if } x > x_2
+        \end{cases}
+    \end{equation*}
+    where $y_2(x)$ is the unique solution of $g'(y) = h'(x-y) + (b-a)f_1(ay+b(x-y))$
+    Inductively, 
+
+    $$
+    f_{n+1}(x) = \mathlarger{\max}_{0 \le y \le x} \left\{ g(y) + h(x-y) + f_n(ay+b(x-y)) \right\}
+    $$
+
+    The solution space hence can be divided into three parts from, $[0, x_2]$, $[x_2, x_1]$ and $[x_1, \infty)$, wherein the inequality $f'_{n+1}(x) \ge f'_{n}(x)$ holds for all $x$.
+    
+    For $n=1$, 
+    $$
+    f'_2(x) = \frac{bg'(y_2) - ah'(x-y_2)}{b-a} \text{ for } x \ge x_2
+    $$
+    
+    and 
+    
+    $$
+    f'_1(x) = \frac{bg'(y_1) - ah'(x-y_1)}{b-a} \text{ for } x \ge x_1
+    $$
+    
+    For $[x_1, \infty)$, and $f'$ is monotonically decreasing and $y_2 < y_1$, $f'_2(x) > f'_1(x)$. In, $[0, x_2]$, $f'_2(x) = f'_1(x)$.
+    
+    \vspace{5mm}
+    In $[x_2, x_1]$,
+    $$
+    f'_1(x) = g'(x)
+    $$
+    $$
+    f'_2(x) = \frac{bg'(y_2) - ah'(x-y_2)}{b-a} \text{ for } x \ge x_2
+    $$
+
+    Hence, in the interval, $0 \le y_2 \le x$ for $x \in [x_2, x_1]$,
+    $$
+        f'_2(x) \ge \frac{bg'(x) - ah'(0)}{b-a} > g'(x)
+    $$
+    And we assume that, $g'(x) \ge h'(0) \therefore f'_2(x) > f'_1(x)$
+
+    Or, for $x_1 > x_2 > x_3 > \cdots > x_n > 0$, $f'_1(x) \le f'_2(x) \le f'_3(x) \le \cdots \le f'_{n}(x) \le \cdots$
+    
+    \vspace{5mm}
+    Since $f_n (x)$ converges to $f(x)$, $f_n' (x)$ to $f' (x)$, $y_n (x)$ to $y (x)$ and $x_n$ to $\bar{x}$, the solution has the form, 
+
+    $$
+    f(x) = \mathlarger{\max}_{0 \le y \le x} \left\{ g(y) + h(x-y) + f(ay+b(x-y)) \right\}
+    $$
+
+    \begin{align*}
+        \frac{df}{dx} = 0 
+        \implies g'(y)-h'(x-y)+(a-b)f'(ay+b(x-y))=0
+    \end{align*}
 \end{proof}
+
+% \textbf{A Problem:} Let $c, d > 0$ and $$
