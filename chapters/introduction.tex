@@ -1,7 +1,7 @@
 %!TEX root = ../main.tex
 
 % \section{A Multi-Stage Allocation Process}
-\section{Introductory Dynamic Programming}
+\section{Introductory Dynamic Programming (Understanding Bellman)}
 
 \subsection{Introduction}
 \subsubsection{Notation}
@@ -398,10 +398,33 @@ convex function, and for each value of $x$, $y$ will equal 0 or $x$.
     \end{enumerate}
     Then the optimal policy has the following form:
     \begin{enumerate}
-        \item $y=x$ for $O<x<\bar{x}$, where $\bar{x}$ is the root of $h'(0)=g'(x)+(b-a)g'(ax)+(b-a)ag'(a^2x) +\cdots$
-        \item $y=y(x)$ for $x > \bar{x}$ where $y(x)$ is a function satisfying the inequalities $O < y(x) < x$, and $y(x)$ is the solution of $\boxed{g'(y)-h'(x-y)+(a-b)f'(ay+b(x-y))=0}$
+        \item $y=x$ for $0<x<\bar{x}$, where $\bar{x}$ is the root of $h'(0)=g'(x)+(b-a)g'(ax)+(b-a)ag'(a^2x) +\cdots$
+        \item $y=y(x)$ for $x > \bar{x}$ where $y(x)$ is a function satisfying the inequalities $0 < y(x) < x$, and $y(x)$ is the solution of $\boxed{g'(y)-h'(x-y)+(a-b)f'(ay+b(x-y))=0}$
     \end{enumerate}
 \end{theorem}
+
+\begin{tcolorbox}
+    \begin{center}
+        \textbf{\underline{A Result on Concavity}}
+    \end{center}
+    Let $g(x) = \mathlarger{\sup_{0\le y \le x}} \phi(x,y)$ and $\epsilon > 0$ $\exists y_1 \in [0, x]$ such that, 
+
+    $$\phi(x_1, y_1) > g(x_1) - \epsilon$$
+    $$\phi(x_2, y_2) > g(x_2) - \epsilon$$
+
+    \begin{align*}
+        \therefore \lambda(\phi(x_1, y_1)) + (1-\lambda)(\phi(x_2, y_2)) > \lambda g(x_1) + (1-\lambda)g(x_2) - \epsilon \\
+        \implies \phi (\lambda (x_1, y_1) + (1-\lambda)(x_2, y_2)) > \lambda g(x_1) + (1-\lambda)g(x_2) - \epsilon \\
+        \implies \phi (\lambda x_1 + (1-\lambda)x_2, \lambda y_1 + (1-\lambda)y_2) > \lambda g(x_1) + (1-\lambda)g(x_2) - \epsilon \\
+    \end{align*}
+    We can also say that, 
+    \begin{align*}
+        {\max_{0 \le y \le \lambda x_1 + (1-\lambda)x_2}} \phi (\lambda x_1 + (1-\lambda)x_2, y) \ge \lambda g(x_1) + (1-\lambda)g(x_2) - \epsilon \\
+        \implies g(\lambda x_1 + (1-\lambda)x_2) \ge \lambda g(x_1) + (1-\lambda)g(x_2) - \epsilon \\
+    \end{align*}
+    \vspace{-1cm}
+    $$\implies g \text{ is concave.}$$
+\end{tcolorbox}
 
 \begin{proof}
     It is known that, 
@@ -470,9 +493,204 @@ convex function, and for each value of $x$, $y$ will equal 0 or $x$.
     $$
 
     \begin{align*}
-        \frac{df}{dx} = 0 
+        \frac{df}{dy} = 0 
         \implies g'(y)-h'(x-y)+(a-b)f'(ay+b(x-y))=0
     \end{align*}
 \end{proof}
 
 % \textbf{A Problem:} Let $c, d > 0$ and $$
+\subsection{Examples}
+
+% \begin{example} Let $c,d>0$ and $0<b\le a<1$. Let $f(x)=\max[cy-y^2 + d(x-y) - (x-y)^2+ f(ay +b(x-y))]$, $f(0)=0$.
+% Show that, in the maximum interval over which the g and h functions are both increasing, i.e. $0 < x < \min(c/2, d/2)$, $f(x)$ has the following form, which depends on the sign of $c/(1 - a) - d/(1 - b)$.
+
+% \vspace{5mm}
+% \textbf{Solution:} Let $\alpha = c/(1-a)$ and $\beta = d/(1-b)$. Then, $\alpha$ and $\beta$ can have these relationships.
+
+% \textbf{I $\rightarrow$} $\alpha = \beta$
+% \end{example}
+
+\begin{example} Show that, The continuous solution of $f(x) = \max[cx^d + f(ax), ex^g + f(bx)], f(0) =0$, subject to 
+\begin{enumerate}
+    \item $a, b \in (0, 1)$, $c, d, e, g >0$,
+    \item $0 < d<g$
+\end{enumerate}
+is given by, 
+    \begin{equation*}
+        f(x) = 
+        \begin{cases}
+            \frac{cx^d}{1-a^d}, & \text{if } 0 \le x \le \bar{x}\\
+            ex^g+f(bx), & \text{if } x \ge \bar{x}
+        \end{cases}
+    \end{equation*}
+where, $\bar{x} = \mathlarger{\left(\frac{c/(1-a^d)}{e/(1-b^d)}\right)^{\frac{1}{g-d}}}$.
+
+\vspace{5mm}
+\textbf{Solution:} Assuming, $A$ as the choice $cx^d + f(ax)$ and $B$ as the choice $ex^g + f(bx)$, we have any solution of the form $A^{k_1^t}B^{k_2^t}$ or the number of times A and B are chosen to reach a solution at the $t^{th}$ step.
+
+At optimal time, represented by say $\infty$, any choice of A or B would not change the solution. Mathematically, 
+
+$$BA^\infty = A^\infty$$
+
+Now, 
+
+\begin{align*}
+    A^\infty &= cx^d + f(ax) = cx^d + c(ax)^d + f(a^2x) + f(a^3x) + \cdots \\
+             &= \frac{cx^d}{(1-a^d)}
+\end{align*}
+
+Similarly, $BA^{\infty} \implies f(x) = ex^g + \frac{cb^dx^d}{(1-a^d)}$.
+
+Equating them we get, 
+$$
+ex^g + \frac{cb^dx^d}{(1-a^d)} = \frac{cx^d}{(1-a^d)} \implies x = {\left(\frac{c/(1-a^d)}{e/(1-b^d)}\right)^{\frac{1}{g-d}}}
+$$
+
+The value of $x$ is the optimal x, $\bar{x}$.
+
+\textbf{Case I:} When $0 \le x \le \bar{x}$ We have to show that $\frac{cx^d}{1-a^d}$ is the solution. At $t=\infty$,
+$$
+\max\left[\frac{cx^d}{(1-a^d)}, ex^g + \frac{cb^dx^d}{(1-a^d)}\right] = \frac{cx^d}{(1-a^d)}
+$$
+
+This is true for small $x$ when $g>d>0$ and $b \in (0, 1)$. If we proceed for more values of x, the smallest value at which solution B becomes optimal is attained at $BA^\infty=A^\infty$ which occurs at $x = \bar{x}$ as calculated above.
+
+\vspace{4mm}
+\textbf{Case II:} When $x \ge \bar{x}$, we have to show that $ex^g + f(bx)$ is the solution. At $t=\infty$,
+
+Define, $f_{AB} (x) = cx^d + ea^gx^g + f(abx)$ and $f_{BA} (x) = ex^g + cb^dx^d + f(abx)$. These are compositions of the two choices $A$ and $B$. It can be interpreted as the dominant choice at each step, as $f_{AB}$ will signify the choice of $A$ at the first step and $B$ at the second step and so on. Similarly, $f_{BA}$ will signify the choice of $B$ at the first step and $A$ at the second step and so on.
+
+Now, their point of intersection occurs at $p = {\left(\frac{c/(1-b^d)}{e/(1-a^g)}\right)^{\frac{1}{g-d}}}$.
+
+Now, $p < \bar{x}$ as $g > d$. At this point, $f_{AB} (x) < f_{BA} (x)$ for $x > p$ for $x > \bar{x}$. This arises a contradiction. 
+
+$\therefore$ $f(x) = ex^g + f(bx)$ is the optimal choice only when $x \ge \bar{x}$.
+\end{example}
+
+\vspace{0.8cm}
+\begin{example} Let us define the function $f_N(a) = \max_R [x_1 x_2 \cdots x_n] $ where $R$ is the region determined by the conditions
+    \begin{enumerate}
+        \item $x_1 + x_2 + \cdots + x_n = a, a > 0$
+        \item $x_i \ge 0$
+    \end{enumerate}
+Prove that $f_N(a)$ satisfies the recurrence relation $f_N(a) = \mathlarger{\max_{0 \le x \le a}} xf_{N-1}(a-x), N \ge 2$ with $f_1(a) = a$.
+
+\vspace{5mm}
+\textbf{Solution:} We can solve this using mathematical induction.
+
+{$N=1$:} $f_1(a) = \max[x_1] = a$ as $x_1 = a$. Hence the relation holds.
+
+{Let $N=k$} be true. That is, $f_k(a) = \mathlarger{\max_{0 \le x \le a}} xf_{k-1}(a-x)$.
+
+{For $N=k+1$}, 
+\begin{align*}
+    f_{k+1}(x) &= \max[x_1 x_2 \cdots x_{k+1}] \\
+               &= \max[\max[x_1 x_2 \cdots x_k] x_{k+1}] \\
+               &= \max[x_{k+1}f_k(a-x_{k+1})] & \text{ as } x_1 + x_2+ \cdots + x_k = a-x_{k+1}
+\end{align*}
+
+$\because$ The relationship hold for all $N \in \mathbb{N}$. The recurrence relation holds.
+
+This completes the proof.
+\end{example}
+
+\begin{example} For the previous $f$, show inductively that $f_N(a) = \frac{a^N}{N^N}$, and hence establish the arithmetic-geometric mean inequality, for $x_i > 0$.
+
+\vspace{5mm}
+\textbf{Solution:} Given, $f_N(a) = \mathlarger{\max_{0 \le x \le a}} xf_{N-1}(a-x)$.
+
+For $N=1$ $f_1(a) = a = \frac{a^1}{1^1}$ which is true.
+
+Let $f_k(a) = \frac{a^k}{k^k}$ hold as well.
+
+For, $N=k+1$, $f_{k+1}(a) = \mathlarger{\max_{0 \le x \le a}} xf_{k}(a-x) = \mathlarger{\max_{0 \le x \le a}} x\frac{(a-x)^k}{k^k}$ which is maximized at $x=\frac{a}{k+1}$ resulting in 
+
+$f_{k+1}(x) = \frac{a^{k+1}}{(k+1)^{k+1}}$
+
+$\because$ The relationship hold for all $N \in \mathbb{N}$. The recurrence relation holds.
+
+This completes the proof.
+\end{example}
+
+\begin{example}
+Define a function,
+$$
+f_N(a) = \min_{R} \bigsum_{i=1}^N x_i^p, p>0
+$$
+
+where $R$ is a region defined by, 
+\begin{enumerate}
+    \item $\bigsum_{i=1}^N x_i \ge a, a > 0$
+    \item $x_i \ge 0$
+\end{enumerate}
+
+Show that $f_N(a)$ satisfies the recurrence relation
+$$
+f_N(a) = \min_{0\le x \le a} [x^p + f_{N-1}(a-x)], N \ge 2 \text{ with } f_1(a) = a^p
+$$
+
+\vspace{5mm}
+\textbf{Solution:} We can solve this inductively as, 
+
+For $N=1$, $f_1(a) = a^p$, which is true.
+
+Let for $N=k$, $f_k(a) = \mathlarger{\min_{0\le x \le a}} [x^p + f_{k-1}(a-x)]$
+
+For, $N=k+1$,
+
+\begin{align*}
+    f_{k+1}(a) &= \min_{R} \bigsum_{i=1}^{k+1} x_i^p \\
+               &= \min_{R} [\min_{R} \bigsum_{i=1}^{k} x_i^p + x_{k+1}^p] \\
+               &= \min_{0\le x \le a} [x_{k+1}^p + f_{k}(a-x)]
+\end{align*}
+
+$\because$ The relationship hold for all $N \in \mathbb{N}$. The recurrence relation holds.
+
+This completes the proof.
+\end{example}
+
+\begin{example}
+Let $f(x)$ and $F(x)$ be the continuous solutions of the above equations under the assumptions that $u(x, y)$ and $v (x,y)$ are continuous in $x$ and $y \forall x,y >0$, with $0 <a,b <1$, and that $\bigsum_{n=0}^\infty m(c^nz) < \infty$ where 
+$m(z) = \mathlarger{\max_{0\le x \le z} [\max_{0 \le y \le x} \max {| u(x, y) |, | v(x, y) |}]}$.
+If $\mathlarger{\max_{0\le x \le z} {\max_{0\le y \le x } |u(x,y)-v(x,y)|}=D(z)}$ and $\bigsum_{n=0}^\infty D(c^nz) < \infty$, $c=\max (a, b)$, show that,
+$$
+|f(x)-F(x)| < \bigsum_{n=0}^\infty D(c^nz)
+$$
+
+\vspace{5mm}
+\textbf{Solution:} We define, 
+\begin{align*}
+    f_1(x) = \max_{0\le y \le x} u(x, y) \\
+    f_{N+1}(x) = \max_{0\le y \le x} \max \big\{ u(x, y), f_N(ay+b(x-y)) \big\} \\
+    F_1(x) = \max_{0\le y \le x} v(x, y) \\
+    F_{N+1}(x) = \max_{0\le y \le x} \max \big\{ v(x, y), F_N(ay+b(x-y)) \big\} \\
+\end{align*}
+
+Also, $\mathlarger{\lim_{N \to \infty}} f_N(x) = f(x)$ and $\mathlarger{\lim_{N \to \infty}} F_N(x) = F(x)$.
+
+Now, 
+$$
+|f_1(x) - F_1(x)| \le \mathlarger{\max_{0\le y \le x}} |u(x, y) - v(x, y)| \le D(x)
+$$
+
+Similarly,
+
+\begin{align*}
+    |f_{N+1}(x) - F_{N+1}(x)| &\le \mathlarger{\max_{0\le y \le x}} \max \big\{ |u(x, y) - v(x, y)|, |f_N(ay+b(x-y)) - F_N(ay+b(x-y))| \big\} \\
+    &\le D(x) + \mathlarger{\max_{0\le y \le x}} |f_N(ay+b(x-y)) - F_N(ay+b(x-y))|
+\end{align*}
+\vspace{-5mm}
+$\therefore$
+\vspace{-5mm}
+$$
+|f_{N+1}(x) - F_{N+1}(x)| \le \bigsum_{n=0}^\infty D(c^nx)
+$$
+
+When, $N \to \infty$
+\vspace{-5mm}
+$$
+|f(x) - F(x)| \le \bigsum_{n=0}^\infty D(c^nx)
+$$
+
+This completes the proof.
+\end{example}
